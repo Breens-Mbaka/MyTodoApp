@@ -22,16 +22,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import com.breens.todoapp.database.TaskAppDatabase
-import com.breens.todoapp.repository.TaskRepository
 import com.breens.todoapp.ui.components.AddTaskDialogComponent
 import com.breens.todoapp.ui.components.EmptyComponent
 import com.breens.todoapp.ui.components.TaskCardComponent
 import com.breens.todoapp.ui.components.WelcomeMessageComponent
 import com.breens.todoapp.ui.theme.MyTodoAppTheme
 import com.breens.todoapp.viewmodel.TaskViewModel
-import com.breens.todoapp.viewmodel.TaskViewModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -42,20 +38,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val taskAppDatabase = TaskAppDatabase
-
-            val taskRepository = TaskRepository(taskAppDatabase = taskAppDatabase.getInstance(this))
-
-            // Create an instance of the TaskViewModelFactory and pass it the repository instance
-            val factory = TaskViewModelFactory(taskRepository)
-
-            // Use the factory to get an instance of the TaskViewModel
-            taskViewModel = factory.let {
-                ViewModelProvider(
-                    this,
-                    it
-                ).get(TaskViewModel::class.java)
-            }
+//            val taskAppDatabase = TaskAppDatabase
+//
+//            val taskRepository = TaskRepository(taskAppDatabase = taskAppDatabase.getInstance(this))
+//
+//            // Create an instance of the TaskViewModelFactory and pass it the repository instance
+//            val factory = TaskViewModelFactory(taskRepository)
+//
+//            // Use the factory to get an instance of the TaskViewModel
+//            taskViewModel = factory.let {
+//                ViewModelProvider(
+//                    this,
+//                    it
+//                ).get(TaskViewModel::class.java)
+//            }
 
             val taskUiState = taskViewModel?.tasks?.collectAsState()?.value
             val dialogUiState = taskViewModel?.dialogUiState?.value
