@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             },
                             onClick = {
-                                taskViewModel!!.showDialog(true)
+//                                taskViewModel!!.showDialog(true)
                             },
                             modifier = Modifier.padding(horizontal = 12.dp),
                             backgroundColor = Color.Black,
