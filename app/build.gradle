@@ -74,4 +74,9 @@ dependencies {
     def lottieVersion = "5.2.0"
 
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+
+    // Work Manager
+    def work_version = "2.8.1"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    androidTestImplementation "androidx.work:work-testing:$work_version"
 }

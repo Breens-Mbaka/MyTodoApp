@@ -35,4 +35,17 @@ class TaskRepository(taskAppDatabase: TaskAppDatabase) {
             taskDao.deleteTask(task = task)
         }
     }
+
+    suspend fun deleteAllTasks(): Boolean {
+        return withContext(Dispatchers.IO) {
+            /** Get all the tasks available */
+            val tasks = taskDao.getAllTask()
+
+            /** Delete all the tasks available */
+            taskDao.deleteAllTasks(tasks = tasks)
+
+            /** Confirm all tasks have been delete */
+            taskDao.getAllTask().isEmpty()
+        }
+    }
 }

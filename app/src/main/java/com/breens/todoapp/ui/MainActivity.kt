@@ -1,9 +1,11 @@
 package com.breens.todoapp.ui
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,13 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,8 +49,13 @@ class MainActivity : ComponentActivity() {
 
             val taskRepository = TaskRepository(taskAppDatabase = taskAppDatabase.getInstance(this))
 
+            val application = Application()
+
             // Create an instance of the TaskViewModelFactory and pass it the repository instance
-            val factory = TaskViewModelFactory(taskRepository)
+            val factory = TaskViewModelFactory(
+                taskRepository = taskRepository,
+                application = application
+            )
 
             // Use the factory to get an instance of the TaskViewModel
             taskViewModel = factory.let {
@@ -57,35 +65,64 @@ class MainActivity : ComponentActivity() {
                 ).get(TaskViewModel::class.java)
             }
 
+            LaunchedEffect(key1 = true) {
+                taskViewModel!!.deleteAllTaskAfterCertainDuration()
+            }
+
             val taskUiState = taskViewModel?.tasks?.collectAsState()?.value
             val dialogUiState = taskViewModel?.dialogUiState?.value
 
             MyTodoAppTheme {
                 Scaffold(
                     floatingActionButton = {
-                        ExtendedFloatingActionButton(
-                            icon = {
-                                Icon(
-                                    Icons.Rounded.AddCircle,
-                                    contentDescription = "Add Task",
-                                    tint = Color.White
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = "Add Task",
-                                    color = Color.White
-                                )
-                            },
-                            onClick = {
-                                taskViewModel!!.showDialog(true)
-                            },
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            backgroundColor = Color.Black,
-                            elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
-                        )
+                        Column {
+                            ExtendedFloatingActionButton(
+                                icon = {
+                                    Icon(
+                                        Icons.Rounded.AddCircle,
+                                        contentDescription = "Add Task",
+                                        tint = Color.White
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        text = "Add Task",
+                                        color = Color.White
+                                    )
+                                },
+                                onClick = {
+                                    taskViewModel!!.showDialog(true)
+                                },
+                                modifier = Modifier.padding(horizontal = 12.dp),
+                                backgroundColor = Color.Black,
+                                elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
+                            )
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            ExtendedFloatingActionButton(
+                                icon = {
+                                    Icon(
+                                        Icons.Rounded.Delete,
+                                        contentDescription = "Delete Tasks",
+                                        tint = Color.White
+                                    )
+                                },
+                                text = {
+                                    Text(
+                                        text = "Delete Tasks",
+                                        color = Color.White
+                                    )
+                                },
+                                onClick = {
+                                    taskViewModel!!.deleteAllTasks()
+                                },
+                                modifier = Modifier.padding(horizontal = 12.dp),
+                                backgroundColor = Color.Black,
+                                elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 8.dp)
+                            )
+                        }
                     },
-                    floatingActionButtonPosition = FabPosition.Center,
                     backgroundColor = Color(0XFFFAFAFA)
                 ) {
                     if (taskUiState?.tasks.isNullOrEmpty()) {

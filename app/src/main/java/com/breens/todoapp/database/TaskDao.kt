@@ -20,4 +20,7 @@ interface TaskDao {
 
     @Delete
     fun deleteTask(task: Task)
+
+    @Delete
+    fun deleteAllTasks(tasks: List<Task>)
 }
